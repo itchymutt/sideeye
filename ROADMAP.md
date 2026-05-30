@@ -341,6 +341,23 @@ In order of leverage:
    "Shipped" section at the bottom and add the next priority to "Ready
    to build" if relevant.
 
+### Local environment gotcha
+
+This machine has a global `insteadOf` rewrite that maps
+`https://github.com/` to `ssh://git@github.com/`. The itchymutt account
+authenticates over HTTPS with a gh-managed token, not SSH. **To push to
+this repo:**
+
+```bash
+git config --global --unset url.ssh://git@github.com/.insteadOf
+git push origin main
+git config --global url.ssh://git@github.com/.insteadOf https://github.com/
+```
+
+A permanent fix: add an itchymutt SSH key to GitHub and to `~/.ssh/config`
+so the `git@github.com` SSH route resolves to the right identity. Not done
+yet because HTTPS-via-gh works fine for now.
+
 ---
 
 ## Shipped (the historical record)

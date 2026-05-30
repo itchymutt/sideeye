@@ -13,7 +13,7 @@ calls, no telemetry. Just regex and Python.
 
 SideEye ships with three rule packs. Add your own in a single Python file.
 
-**`prompt-safety`** (default) — LLM prompt and agent-trace failure modes:
+**`prompt-safety`** (default) - LLM prompt and agent-trace failure modes:
 - Direct prompt injection ("ignore all previous instructions")
 - Jailbreaks / DAN / persona overrides
 - Role escalation ("you are the ultimate X")
@@ -26,7 +26,7 @@ SideEye ships with three rule packs. Add your own in a single Python file.
 - Overconfident or under-constrained creative prompts
 - Style attribution to unknown people (soft signal)
 
-**`markdown`** — Markdown style, accessibility, and hygiene:
+**`markdown`** - Markdown style, accessibility, and hygiene:
 - Missing image alt text
 - Heading-level jumps
 - Lazy link text ("click here", "read more")
@@ -34,7 +34,7 @@ SideEye ships with three rule packs. Add your own in a single Python file.
 - TODO/FIXME left in the document
 - Trailing whitespace, multiple blank lines
 
-**`personal-info`** — User-configured sensitive strings. Reads from
+**`personal-info`** - User-configured sensitive strings. Reads from
 `~/.config/sideeye/personal.toml`. Use this for your real name, internal
 project codenames, client names under NDA, etc. See
 [examples/personal.toml.example](examples/personal.toml.example).

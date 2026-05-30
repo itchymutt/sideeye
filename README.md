@@ -1,16 +1,6 @@
 # SideEye
 
-SideEye is a local text linter for prompts, markdown, and sensitive text. It runs entirely on your machine: no network calls, no model calls, no telemetry. Just regex and Python.
-
----
-
-## Features
-
-- Prompt safety checks for known jailbreak and injection patterns
-- Markdown style and accessibility linting
-- Personal PII / project-codeword detection from a local config file
-- TUI with safer rewrites and templates
-- CLI for scripts, CI, and pre-commit hooks
+SideEye is a local text linter for prompts, markdown, and sensitive text. It runs entirely on your machine — no network calls, no model calls, no telemetry. Comes with a TUI and a CLI. Just regex and Python.
 
 ---
 

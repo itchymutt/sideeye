@@ -132,6 +132,99 @@ don't actually wire it up. A pre-commit config makes it trivial.
 - New: `.pre-commit-hooks.yaml`
 - `README.md` (add section)
 
+### 5. `compress` pack — ~2 hours
+
+**Why:** Token efficiency keeps coming up as a "side effect" of the
+strip pass, but the strip pass isn't designed for it. A dedicated pack
+would do the safe 20% really well — connective swaps, redundancy
+collapse — and stay honest about not pretending to do the LLM-required
+80% (sentence rewording, paraphrasing for length).
+
+**The honest scope:**
+
+A regex-based compress pack can reliably handle:
+
+- **Verbose connectives:** "in order to" → "to", "due to the fact that"
+  → "because", "at this point in time" → "now", "for the purpose of"
+  → "to"
+- **Hedging filler:** "I would like for you to" → "please", "I was
+  wondering if you could" → ""
+- **Repetition collapse:** "very very" → "very", "really really really"
+  → "" (strip entirely), "super super" → ""
+- **Empty politeness:** "if you would be so kind as to" → "", "if it's
+  not too much trouble" → ""
+- **Restating instructions:** "as I mentioned earlier" → "", "going back
+  to what I said" → ""
+- **Redundant qualifiers:** "absolutely essential" → "essential",
+  "completely unique" → "unique", "totally free" → "free"
+
+What it CANNOT do safely with regex alone:
+
+- Synonym swaps ("utilize" → "use"). These are style choices, not
+  redundancy. Belongs in a separate `style` pack if anywhere.
+- Sentence restructuring ("there are several reasons why X" → "X
+  because"). High value, but the meaning-preservation requires an LLM.
+- Removing genuine but verbose context. Sometimes wordiness is
+  emphasis; only the user knows.
+
+**Scope-awareness (the hard part):**
+
+The compressor must NOT touch:
+
+- Triple-backtick code blocks
+- Inline code spans (`text in backticks`)
+- Quoted strings inside `"..."` or `'...'`
+- Numbered lists where the count carries meaning
+- URLs, file paths, identifiers (anything matching the `_is_identifier_token`
+  check we built for `_tidy_whitespace`)
+- Content inside explicit `<preserve>...</preserve>` tags (new convention
+  the pack would define)
+
+This is the same kind of scope-respecting regex work we did for
+prompt-safety's PII detection. Reuse the patterns.
+
+**UI implications:**
+
+- The history strip should show **token delta** prominently:
+  `LAST COMPRESS · 247 → 198 tokens · 49 saved (20%)`
+- Each change in the change log shows both sides:
+  `"in order to" → "to" (3 tok saved × 4 occurrences = 12 saved)`
+- The status line in the right pane probably wants a different shape
+  for this pack — fewer "findings", more "savings"
+
+**Hardest decision:**
+
+Whether to share token-counting logic with prompt-safety (which already
+does it for the status line) or build a more accurate counter for
+compress (which actually depends on it). My instinct: ship with the
+current `max(words*1.33, chars/4)` heuristic, document the imprecision,
+and let users with strict token budgets pipe through `tiktoken` themselves.
+Building a tokenizer dependency into the pack is feature creep.
+
+**Files to touch:**
+- New: `src/sideeye/packs/compress.py` (~250 lines, similar shape to
+  markdown.py)
+- `src/sideeye/packs/registry.py` (register the pack)
+- `src/sideeye/tui/app.py` (token-delta header in history strip — small
+  branch when `result.pack == "compress"`)
+- New: `tests/test_compress_pack.py` (fixture tests for each rule
+  category, plus negative tests for scope preservation)
+- `README.md` (add to the "What it catches" section)
+
+**Open question to settle before building:**
+
+Does compress run as a separate `ctrl+r` action, or does it become a
+SECOND mode like `ctrl+shift+r` is for preview? My instinct: separate
+keybind (`ctrl+shift+c` for compress), separate pack, separate history
+entry. Users who want both safety-stripping AND compression should run
+prompt-safety first, then switch packs and compress. Don't auto-chain
+because the interaction is non-obvious.
+
+**Note:** Don't ship compress as a feature of prompt-safety. That was the
+right instinct when you flagged token efficiency — the README pitch stays
+clean because compress is its own pack with its own scope. Same
+architecture, different domain.
+
 ---
 
 ## Deferred (good ideas, wrong moment)

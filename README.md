@@ -82,8 +82,6 @@ Looks for documented LLM failure patterns, including:
 - Named living artists (designer-style prompts)
 - Brand impersonation and over-the-top “make it perfect” prompts
 
-It matches known patterns, not every proper noun, so it doesn’t light up on every capitalized word.
-
 ### `markdown`
 
 Checks markdown for:
@@ -97,13 +95,7 @@ Checks markdown for:
 
 ### `personal-info`
 
-Matches PII and project-specific strings from:
-
-```text
-~/.config/sideeye/personal.toml
-```
-
-Use it for your real name, internal codenames, NDA client names, etc.
+Matches PII and project-specific strings from `~/.config/sideeye/personal.toml`. Use it for your real name, internal codenames, NDA client names, etc.
 
 Example:
 
@@ -129,29 +121,11 @@ internal_ids = ["\\bACME-\\d{4,}\\b"]
 
 It does *not* add boilerplate, prepend guardrails, or try to “improve” your prompt.
 
-For project-specific strings, run with `--pack personal-info` and a `personal.toml` as above.
-
 ---
 
 ## Custom packs
 
-A pack is a single Python file subclassing `BasePack` with a list of regex-powered rules. Once you register it, it works everywhere:
-
-```bash
-sideeye --pack your-pack-name
-```
-
-See `src/sideeye/packs/markdown.py` and `src/sideeye/packs/personal_info.py` for working examples.
-
----
-
-## Design principles
-
-- Local first: text never leaves your machine.
-- No black boxes: every rule is inspectable Python or regex.
-- Keyboard-first: every action has a keybinding.
-- CLI-first: pipe-friendly, JSON output, exit codes for automation.
-- Quiet, clinical findings: tuned to documented attacks, not arbitrary content.
+A pack is a single Python file subclassing `BasePack` with a list of regex rules. See `src/sideeye/packs/markdown.py` for a compact example.
 
 ---
 

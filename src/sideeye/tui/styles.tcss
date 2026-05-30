@@ -1,0 +1,176 @@
+/* SideEye styles. Quiet, structural, content-first. */
+
+Screen {
+    background: $background;
+    color: $foreground;
+}
+
+#root {
+    height: 1fr;
+}
+
+/* ---------- Top bar ---------- */
+
+#top-bar {
+    height: 1;
+    background: $panel;
+    color: $text-muted;
+    padding: 0 1;
+    text-style: bold;
+}
+
+/* ---------- Main split ---------- */
+
+#main-split {
+    height: 1fr;
+}
+
+#left-pane {
+    width: 55%;
+    min-width: 40;
+    padding: 0 1 0 1;
+}
+
+#right-pane {
+    width: 45%;
+    min-width: 38;
+    padding: 0 1 0 1;
+    border-left: vkey $panel-darken-1;
+}
+
+.pane-label {
+    color: $text-muted;
+    text-style: bold;
+    margin: 0 1;
+    height: 1;
+}
+
+/* ---------- Editor ---------- */
+
+#prompt-editor {
+    height: 1fr;
+    border: round $panel;
+    background: $surface;
+}
+
+#prompt-editor:focus {
+    border: round $primary;
+}
+
+/* ---------- Status line (top of right pane) ---------- */
+
+.status-line {
+    width: 1fr;
+    height: 1;
+    margin: 0 1 1 1;
+    padding: 0 1;
+    background: $panel;
+    color: $foreground;
+}
+
+.status-line.sev-critical { background: $error 20%; }
+.status-line.sev-high     { background: $warning 20%; }
+.status-line.sev-medium   { background: $accent 15%; }
+.status-line.sev-low      { background: $panel; }
+.status-line.sev-none     { background: $panel; }
+
+/* ---------- Findings list ---------- */
+
+#findings-scroll {
+    height: 1fr;
+    background: $surface;
+    border: round $panel;
+    padding: 1;
+}
+
+.empty-state {
+    color: $text-muted;
+    text-align: center;
+    padding: 2 1;
+    text-style: italic;
+}
+
+.empty-state-clean {
+    color: $success;
+}
+
+.findings-overflow {
+    color: $text-muted;
+    text-style: italic;
+    text-align: center;
+    margin-top: 1;
+}
+
+/* ---------- Finding cards ---------- */
+
+.finding-card {
+    height: auto;
+    padding: 0 1 1 1;
+    margin-bottom: 1;
+    border-left: thick $panel;
+    background: $surface;
+}
+
+.finding-card.sev-critical { border-left: thick $error; }
+.finding-card.sev-high     { border-left: thick $warning; }
+.finding-card.sev-medium   { border-left: thick $accent; }
+.finding-card.sev-low      { border-left: thick $success; }
+
+.finding-header {
+    height: 1;
+    margin-bottom: 0;
+}
+
+.finding-message {
+    height: auto;
+    color: $foreground;
+    margin-top: 0;
+}
+
+.finding-excerpt {
+    height: auto;
+    color: $text-muted;
+    margin-top: 0;
+}
+
+.finding-suggestion {
+    height: auto;
+    color: $accent;
+    margin-top: 0;
+}
+
+/* ---------- Remix history strip (below editor) ---------- */
+
+#remix-history {
+    height: auto;
+    max-height: 12;
+    margin-top: 1;
+    border: round $panel;
+    background: $surface;
+    padding: 0 1;
+}
+
+#remix-history.remix-history-hidden {
+    display: none;
+}
+
+#remix-history-content {
+    height: auto;
+    color: $text;
+}
+
+/* ---------- Footer ---------- */
+
+Footer {
+    background: $panel;
+    color: $text-muted;
+}
+
+FooterKey {
+    background: $panel;
+}
+
+FooterKey .footer-key--key {
+    color: $accent;
+    text-style: bold;
+}

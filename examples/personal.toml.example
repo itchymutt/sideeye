@@ -1,0 +1,53 @@
+# SideEye personal-info pack config.
+#
+# Copy this file to ~/.config/sideeye/personal.toml and fill in your own
+# values. Lists of strings under [strings] are matched literally and
+# case-insensitively. Lists of patterns under [regex] are full Python regex.
+#
+# The keys you use (names, emails, project_codenames, etc.) become the
+# finding categories in the UI, so pick labels that read well.
+
+[strings]
+# Your real name, family member names, anyone whose name you don't want
+# leaking into prompts.
+names = [
+    "Your Real Name",
+    "Family Member One",
+]
+
+# Personal emails — work emails are usually fine, but maybe not your
+# private inbox.
+emails = [
+    "you@personal-domain.example",
+]
+
+# Phone numbers, addresses, any other PII.
+phones = []
+addresses = []
+
+# Clients under NDA, internal customer names, anything you can't say in
+# public.
+clients = [
+    # "Confidential Client Inc",
+]
+
+# Internal project codenames that haven't been announced.
+codenames = [
+    # "Project Hummingbird",
+]
+
+
+[regex]
+# Each value is a Python regex. Use this when literal matching isn't enough
+# (e.g., codename has variations, or you want to match a family of IDs).
+
+# Internal ticket IDs you don't want leaking.
+internal_ids = [
+    # "\\bACME-\\d{4,}\\b",
+]
+
+# Common variations of a project codename.
+project_variations = [
+    # "Project [Hh]ummingbird",
+    # "Op(?:eration)? Sage",
+]

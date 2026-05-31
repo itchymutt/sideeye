@@ -6,6 +6,15 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ---
 
+## [Unreleased]
+
+### What's in
+
+- **Third-party packs.** External packages can register packs via the `sideeye.packs` entry-point group. Discovered packs join the registry, appear in `sideeye packs`, and work with `sideeye scan --pack <name>` like builtins. Builtins win name conflicts. Broken packs are skipped without taking down the others.
+- **File context for packs.** The `Pack` protocol and `BasePack` gain an optional `file_path` attribute. The CLI sets it when `--file` is used so packs can implement file-aware rules (e.g., "name field must match directory"). Existing packs work unchanged.
+
+---
+
 ## [0.2.0] — 2026-05-30
 
 Initial public release.

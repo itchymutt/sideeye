@@ -11,6 +11,7 @@ from __future__ import annotations
 import re
 from collections.abc import Callable
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Protocol, runtime_checkable
 
 from sideeye.models import Category, Finding, ScanResult, Severity
@@ -89,6 +90,10 @@ class Pack(Protocol):
     rules: list[PackRule]
     templates: list[Template]
 
+    # Optional file context. Callers may set this on a pack instance before
+    # scanning so that file-aware rules can use it. None means unknown.
+    file_path: Path | None
+
     def detects(self, text: str) -> bool:
         """Should this pack auto-activate on this text? Used when no --pack flag."""
         ...
@@ -126,6 +131,11 @@ class BasePack:
     """Default Pack implementation. Subclass this and override what you need.
 
     Subclasses typically just set class attributes and override `rewrite()`.
+
+    `file_path`, when set by the caller before scanning, lets rules reason
+    about the file context (parent directory, extension, sibling files).
+    The CLI sets this when invoked with `--file`; in-memory scans leave it
+    as None. Rules that use it must handle the None case gracefully.
     """
 
     name: str = "base"
@@ -135,6 +145,10 @@ class BasePack:
     categories: list[Category] = field(default_factory=list)
     rules: list[PackRule] = field(default_factory=list)
     templates: list[Template] = field(default_factory=list)
+    # Optional file context. Set by the caller before scan() if the text came
+    # from a file on disk. None means "we don't know" (e.g., TUI editor buffer,
+    # piped stdin). Rules that depend on file context should no-op when this is None.
+    file_path: Path | None = None
 
     def detects(self, text: str) -> bool:
         return False

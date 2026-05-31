@@ -272,6 +272,11 @@ def _resolve_input_and_pack(args: argparse.Namespace) -> tuple[str, Pack]:
     if callable(reload_fn):
         reload_fn()
 
+    # Propagate file context to the pack so file-aware rules can use it.
+    # Packs that don't care about file paths just ignore this attribute.
+    if hasattr(pack, "file_path"):
+        pack.file_path = file_path
+
     return text, pack
 
 
